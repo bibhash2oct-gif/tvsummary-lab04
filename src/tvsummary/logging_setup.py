@@ -3,27 +3,30 @@
 import logging
 import sys
 
-PACKAGE_LOGGER = "tvsummary"
+HANDLER_NAME = "tvsummary"
 LOG_FORMAT = "%(asctime)s %(levelname)-8s %(name)s: %(message)s"
 LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
 
 
 def configure_logging(level: str) -> None:
-    """Send the package's log records to standard error at the given level.
+    """Send log records to standard error at the given level.
 
-    Only the "tvsummary" logger is configured, so the root logger and other
-    libraries are left alone. Calling this again replaces the old handler
-    instead of adding a second one.
+    The handler goes on the root logger so that every module's logger is
+    covered, including main.py, whose logger is called "__main__" when it
+    runs with python -m. Calling this again replaces our handler instead of
+    adding a second one, and leaves other handlers alone.
     """
     level_name = level.upper()
     if level_name not in LEVELS:
         raise ValueError(f"Unknown log level {level!r}; use one of {LEVELS}")
 
-    logger = logging.getLogger(PACKAGE_LOGGER)
-    for old_handler in list(logger.handlers):
-        logger.removeHandler(old_handler)
+    root = logging.getLogger()
+    for old_handler in list(root.handlers):
+        if old_handler.get_name() == HANDLER_NAME:
+            root.removeHandler(old_handler)
 
     handler = logging.StreamHandler(sys.stderr)
+    handler.set_name(HANDLER_NAME)
     handler.setFormatter(logging.Formatter(LOG_FORMAT))
-    logger.addHandler(handler)
-    logger.setLevel(level_name)
+    root.addHandler(handler)
+    root.setLevel(level_name)

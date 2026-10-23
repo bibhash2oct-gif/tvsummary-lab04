@@ -91,13 +91,15 @@ def fake_response_class() -> type[FakeResponse]:
 
 
 @pytest.fixture(autouse=True)
-def reset_package_logger() -> Iterator[None]:
+def reset_logging() -> Iterator[None]:
     """Undo configure_logging after each test so tests stay independent."""
+    root = logging.getLogger()
+    level = root.level
     yield
-    logger = logging.getLogger("tvsummary")
-    for handler in list(logger.handlers):
-        logger.removeHandler(handler)
-    logger.setLevel(logging.NOTSET)
+    for handler in list(root.handlers):
+        if handler.get_name() == "tvsummary":
+            root.removeHandler(handler)
+    root.setLevel(level)
 
 
 @pytest.fixture
