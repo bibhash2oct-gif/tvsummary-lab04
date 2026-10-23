@@ -11,6 +11,9 @@ dependencies = ["requests>=2.31.0"]
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+tvsummary = ["py.typed"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
@@ -20,3 +23,10 @@ src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
+
+[tool.mypy]
+python_version = "3.11"
+files = ["src"]
+disallow_untyped_defs = true
+warn_return_any = true
+warn_unused_ignores = true
