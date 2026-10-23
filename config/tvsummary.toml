@@ -1,0 +1,21 @@
+# Settings for tvsummary. Every key is required; the program stops with a
+# settings error if one is missing, misspelled or has the wrong type.
+
+# Where the show list is downloaded from.
+source_url = "https://api.tvmaze.com/shows"
+
+# Seconds to wait for the server before giving up.
+timeout = 10
+
+# Folder for summary.json and run_info.json, relative to where you run the command.
+output_dir = "data/processed"
+
+# Seed for random.Random. The same seed and the same shows give the same
+# featured_shows list.
+seed = 5005
+
+# How many featured shows to pick.
+sample_size = 5
+
+# DEBUG, INFO, WARNING, ERROR or CRITICAL.
+log_level = "INFO"

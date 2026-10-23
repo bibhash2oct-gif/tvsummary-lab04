@@ -5,12 +5,23 @@ Every fixture here is hand-made, so no test needs the network.
 
 import logging
 from collections.abc import Iterator
+from pathlib import Path
 from typing import Any
 
 import pytest
 import requests
 
+from tvsummary.config import Settings, load_settings
 from tvsummary.models import TVShow
+
+SETTINGS_TEMPLATE = """\
+source_url = "https://example.invalid/shows"
+timeout = 5
+output_dir = "{output_dir}"
+seed = 5005
+sample_size = 3
+log_level = "DEBUG"
+"""
 
 
 class FakeResponse:
@@ -87,3 +98,18 @@ def reset_package_logger() -> Iterator[None]:
     for handler in list(logger.handlers):
         logger.removeHandler(handler)
     logger.setLevel(logging.NOTSET)
+
+
+@pytest.fixture
+def settings_file(tmp_path: Path) -> Path:
+    """A complete settings file whose output folder is inside tmp_path."""
+    path = tmp_path / "tvsummary.toml"
+    output_dir = (tmp_path / "processed").as_posix()
+    path.write_text(SETTINGS_TEMPLATE.format(output_dir=output_dir))
+    return path
+
+
+@pytest.fixture
+def settings(settings_file: Path) -> Settings:
+    """The Settings object read from settings_file."""
+    return load_settings(settings_file)

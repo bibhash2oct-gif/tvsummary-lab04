@@ -19,7 +19,7 @@ def test_fetch_turns_each_show_into_a_record(
 
     monkeypatch.setattr(sources.requests, "get", fake_get)
 
-    records = sources.TVShowDataSource().fetch()
+    records = sources.TVShowDataSource("https://example.invalid", timeout=1).fetch()
 
     assert len(records) == 5
     assert all(isinstance(record, TVShow) for record in records)

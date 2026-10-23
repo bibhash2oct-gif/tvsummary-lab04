@@ -5,7 +5,6 @@ from typing import Any
 
 import requests
 
-from .config import API_URL, TIMEOUT
 from .errors import DataShapeError, SourceError
 from .models import TVShow
 
@@ -76,7 +75,7 @@ def parse_shows(payload: list[Any]) -> list[TVShow]:
 class TVShowDataSource:
     """Downloads the TVMaze show list and returns TVShow records."""
 
-    def __init__(self, url: str = API_URL, timeout: float = TIMEOUT) -> None:
+    def __init__(self, url: str, timeout: float) -> None:
         self.url = url
         self.timeout = timeout
 
