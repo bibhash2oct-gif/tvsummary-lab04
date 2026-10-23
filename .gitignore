@@ -1,8 +1,18 @@
+# Python bytecode
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Packaging
 *.egg-info/
 build/
 dist/
+
+# Secrets and editor settings
 .env
 .vscode/
+
+# Tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
