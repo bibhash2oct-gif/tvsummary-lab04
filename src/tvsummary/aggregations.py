@@ -5,6 +5,7 @@ class Aggregation:
     def compute(self, records):
         pass
 
+
 class TotalCountAggregation(Aggregation):
     def __init__(self):
         self.key = "total_shows"

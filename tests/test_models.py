@@ -1,5 +1,7 @@
 import unittest
+
 from tvsummary.models import TVShow
+
 
 class TestTVShow(unittest.TestCase):
     def test_cleaning(self):

@@ -1,6 +1,8 @@
 import requests
+
 from .config import API_URL, TIMEOUT
 from .models import TVShow
+
 
 class TVShowDataSource:
     def fetch(self):

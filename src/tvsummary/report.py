@@ -1,5 +1,7 @@
 import json
+
 from .config import OUTPUT_PATH
+
 
 class ReportBuilder:
     def __init__(self, aggregations):
