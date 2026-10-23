@@ -23,6 +23,8 @@ class FakeResponse:
             raise requests.HTTPError(f"{self.status_code} Server Error")
 
     def json(self) -> Any:
+        if isinstance(self.payload, Exception):
+            raise self.payload
         return self.payload
 
 
