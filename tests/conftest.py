@@ -3,6 +3,8 @@
 Every fixture here is hand-made, so no test needs the network.
 """
 
+import logging
+from collections.abc import Iterator
 from typing import Any
 
 import pytest
@@ -75,3 +77,13 @@ def sample_records(raw_shows: list[dict[str, Any]]) -> list[TVShow]:
 def fake_response_class() -> type[FakeResponse]:
     """Gives tests the FakeResponse class without importing conftest."""
     return FakeResponse
+
+
+@pytest.fixture(autouse=True)
+def reset_package_logger() -> Iterator[None]:
+    """Undo configure_logging after each test so tests stay independent."""
+    yield
+    logger = logging.getLogger("tvsummary")
+    for handler in list(logger.handlers):
+        logger.removeHandler(handler)
+    logger.setLevel(logging.NOTSET)

@@ -1,7 +1,10 @@
 import json
+import logging
 
 from .config import OUTPUT_PATH
 from .errors import OutputError
+
+logger = logging.getLogger(__name__)
 
 
 class ReportBuilder:
@@ -19,4 +22,5 @@ class ReportBuilder:
             raise OutputError(
                 f"Could not write the summary to {self.output_path}: {error}"
             ) from error
+        logger.info("Wrote summary to %s", self.output_path)
         return summary

@@ -1,5 +1,6 @@
 """Fetching show data. This is the only module that uses requests."""
 
+import logging
 from typing import Any
 
 import requests
@@ -8,6 +9,8 @@ from .config import API_URL, TIMEOUT
 from .errors import DataShapeError, SourceError
 from .models import TVShow
 
+logger = logging.getLogger(__name__)
+
 
 def download_shows(url: str, timeout: float) -> list[Any]:
     """Download the raw show list from url.
@@ -15,6 +18,7 @@ def download_shows(url: str, timeout: float) -> list[Any]:
     Raises SourceError when the server cannot be reached or answers with an
     error, and DataShapeError when the body is not a JSON list.
     """
+    logger.info("Downloading shows from %s", url)
     try:
         response = requests.get(url, timeout=timeout)
         response.raise_for_status()
@@ -40,6 +44,7 @@ def download_shows(url: str, timeout: float) -> list[Any]:
         raise DataShapeError(
             f"Expected a list of shows from {url}, got {type(payload).__name__}"
         )
+    logger.debug("Received %d raw entries from %s", len(payload), url)
     return payload
 
 
@@ -49,9 +54,22 @@ def parse_shows(payload: list[Any]) -> list[TVShow]:
     Entries that are not objects are skipped. Raises DataShapeError when no
     usable show is left.
     """
-    records = [TVShow(item) for item in payload if isinstance(item, dict)]
+    records: list[TVShow] = []
+    for position, item in enumerate(payload):
+        if not isinstance(item, dict):
+            logger.warning(
+                "Skipping entry %d: expected an object, got %s",
+                position,
+                type(item).__name__,
+            )
+            continue
+        records.append(TVShow(item))
+
     if not records:
         raise DataShapeError("The response contained no usable shows")
+    logger.info(
+        "Parsed %d shows (%d skipped)", len(records), len(payload) - len(records)
+    )
     return records
 
 

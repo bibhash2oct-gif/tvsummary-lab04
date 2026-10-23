@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 
 import pytest
@@ -96,3 +97,14 @@ def test_parse_shows_skips_entries_that_are_not_objects(
 def test_parse_shows_with_nothing_usable_raises() -> None:
     with pytest.raises(DataShapeError, match="no usable shows"):
         sources.parse_shows(["oops", 42])
+
+
+def test_a_skipped_entry_is_logged_as_a_warning(
+    caplog: pytest.LogCaptureFixture, raw_shows: list[dict[str, Any]]
+) -> None:
+    caplog.set_level(logging.WARNING, logger="tvsummary.sources")
+
+    sources.parse_shows([raw_shows[0], "oops"])
+
+    assert "Skipping entry 1: expected an object, got str" in caplog.text
+    assert caplog.records[0].levelname == "WARNING"
