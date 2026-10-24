@@ -1,0 +1,18 @@
+{
+  "generated_at": "2026-10-24T01:47:48+00:00",
+  "python_version": "3.11.17",
+  "package_version": "0.2.0",
+  "tool_versions": {
+    "pytest": "9.1.1",
+    "mypy": "2.4.0",
+    "ruff": "0.17.2"
+  },
+  "settings": {
+    "source_url": "https://api.tvmaze.com/shows",
+    "timeout": 10.0,
+    "output_dir": "data/processed",
+    "seed": 5005,
+    "sample_size": 5,
+    "log_level": "INFO"
+  }
+}
